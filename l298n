@@ -1,0 +1,113 @@
+#include "BluetoothSerial.h" 
+
+BluetoothSerial SerialBT;
+
+#define MR1 14
+#define MR2 12 //B
+#define ML1 27 //A
+#define ML2 26
+#define H 2
+char incoming;
+
+void Forward(){
+  digitalWrite(MR1,HIGH);
+  digitalWrite(MR2,LOW);
+  digitalWrite(ML1,HIGH);
+  digitalWrite(ML2,LOW);
+  Serial.println("FWD");
+}
+void Backward(){
+  digitalWrite(MR1,LOW);
+  digitalWrite(MR2,HIGH);
+  digitalWrite(ML1,LOW);
+  digitalWrite(ML2,HIGH);
+  Serial.println("BKD");
+}
+void Left(){
+  digitalWrite(MR1,HIGH);
+  digitalWrite(MR2,LOW);
+  digitalWrite(ML1,LOW);
+  digitalWrite(ML2,HIGH);
+  Serial.println("lft");  
+}
+void Right(){
+  digitalWrite(MR1,LOW);
+  digitalWrite(MR2,HIGH);
+  digitalWrite(ML1,HIGH);
+  digitalWrite(ML2,LOW);
+  Serial.println("right");  
+}
+void Stop(){
+  digitalWrite(MR1,LOW);
+  digitalWrite(MR2,LOW);
+  digitalWrite(ML1,LOW);
+  digitalWrite(ML2,LOW);
+  Serial.println("Stop"); 
+}
+void Horn(){
+digitalWrite (H,HIGH);
+delay(1000);
+digitalWrite (H,LOW);
+ Serial.println("horn");
+}
+void setup() {
+
+  Serial.begin(115200); //Start Serial monitor in 9600
+ SerialBT.begin("Car123");
+ 
+  Serial.println("Bluetooth Device is Ready to Pair");
+
+
+pinMode(MR1,OUTPUT);
+pinMode(MR2,OUTPUT);
+pinMode(ML1,OUTPUT);
+pinMode(ML2,OUTPUT);
+pinMode(H,OUTPUT);
+Stop();     
+}
+
+void loop() {
+ if (SerialBT.available()) //Check if we receive anything from Bluetooth
+  {
+   incoming = SerialBT.read(); //Read what we recevive 
+   Serial.write(incoming);
+    Serial.print("Received:"); Serial.println(incoming);}
+     if (incoming == 'S')
+        {
+    Stop();                      
+                           
+        }
+        
+         else if (incoming == 'F')
+        {
+        Forward();   
+                                 
+                            
+        }
+
+            else if (incoming == 'B')
+        {
+       Backward();  
+                                  
+                            
+        }
+
+            else if (incoming == 'R')
+        {
+        Right();                    
+                                
+        }
+
+          else  if (incoming == 'L')
+        {
+      Left();  
+        }
+      else if (incoming == 'V')
+      {
+        Horn();                  
+      }
+            
+  delay(20);
+}
+
+
